@@ -1,20 +1,28 @@
 import scrapy
 
+from selenium import webdriver
+from scrapy.selector import Selector
+
+
 class QuoteSpider(scrapy.Spider):
     name = "quotes"
 
-    def start_requests(self):
-        urls = [
-            'http://quotes.toscrape.com/page/1/',
-            'http://quotes.toscrape.com/page/2/',
-        ]
+    start_urls = [
+        'http://windguru.cz/1066/',
+    ]
 
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
+    def __init__(self):
+        self.browser = webdriver.Firefox()
 
     def parse(self, response):
-        page = response.url.split('/')[-2]
-        filename = 'quotest-{}.html'.format(page)
-        with open(filename, 'wb') as f:
-            f.write(response.body)
+        self.browser.get(response.url)
+        html = self.browser.page_source
+        response = Selector(text=html)
+        arrow_list = response.css('svg.arrow g::transform::text').extract()
+        filename = 'results.html'
+        with open(filename, 'w') as f:
+            for arrow in arrow_list:
+                f.write(arrow)
+
+        self.browser.close()
         self.log('Saved file {}'.format(filename))
