@@ -1,0 +1,2 @@
+# scrapai
+Scrapping with Scrapy
