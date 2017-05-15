@@ -18,11 +18,11 @@ class QuoteSpider(scrapy.Spider):
         self.browser.get(response.url)
         html = self.browser.page_source
         response = Selector(text=html)
-        arrow_list = response.css('svg.arrow g::transform::text').extract()
+        arrow_list = response.css('svg.arrow g').extract()
         filename = 'results.html'
         with open(filename, 'w') as f:
             for arrow in arrow_list:
                 f.write(arrow)
 
-        self.browser.close()
+        self.browser.quit()
         self.log('Saved file {}'.format(filename))
