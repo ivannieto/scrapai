@@ -91,3 +91,6 @@ ENV/
 
 # GeckoDriver logs
 geckodriver.log
+
+# URLS to scrap
+urls
